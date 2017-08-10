@@ -2,13 +2,34 @@ group 'com.lousylynx'
 version '1.0'
 
 apply plugin: 'java'
+apply plugin: 'checkstyle'
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    mavenLocal()
+}
+
+configurations {
+    fatjar
 }
 
 dependencies {
 //    testCompile group: 'junit', name: 'junit', version: '4.12'
+    fatjar group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    compileOnly 'org.projectlombok:lombok:1.16.18'
+
+    configurations.compile.extendsFrom(configurations.fatjar)
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.lousylynx.asciidots.ADCLI'
+    }
+
+    from {
+        configurations.fatjar.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
