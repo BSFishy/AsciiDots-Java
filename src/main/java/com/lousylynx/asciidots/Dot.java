@@ -19,6 +19,6 @@ public class Dot {
   }
 
   public boolean is_dead() {
-    return (currentState instanceof Dead)
+      return (currentState instanceof Dead)
   }
 }
