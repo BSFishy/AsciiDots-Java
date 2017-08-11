@@ -17,4 +17,8 @@ public class Dot {
   public void on_tick() {
       currentState.on_tick(this);
   }
+
+  public boolean is_dead() {
+      return (currentState instanceof Dead)
+  }
 }
