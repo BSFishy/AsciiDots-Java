@@ -1,5 +1,7 @@
 package com.lousylynx.asciidots.states;
 
-interface State {
+import com.lousylynx.asciidots.Dot;
+
+public interface IState {
     void on_tick(Dot wrapper);
 }

@@ -1,6 +1,8 @@
 package com.lousylynx.asciidots.states;
 
-class Dead implements State {
+import com.lousylynx.asciidots.Dot;
+
+public class Dead implements IState {
     public void on_tick(Dot wrapper) {
     }
 }
