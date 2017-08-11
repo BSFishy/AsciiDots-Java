@@ -26,7 +26,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'com.lousylynx.asciidots.ADCLI'
+        attributes 'Main-Class': 'com.lousylynx.asciidots.cli.ADCLI'
     }
 
     from {
