@@ -1,11 +1,22 @@
 package com.lousylynx.asciidots.cli;
 
+import lombok.Data;
 import org.apache.commons.cli.*;
 
+@Data
 public class ADCLI {
 
     private boolean exit = false;
     private String[] args;
+    private String code;
+
+    private int ticks;
+    private boolean silent;
+    private boolean debug;
+    private boolean compatDebug;
+    private int debugLines;
+    private float autosetpDebug;
+    private int head;
 
     public static void main(String[] args) {
         new ADCLI(args).start();
@@ -25,15 +36,6 @@ public class ADCLI {
     private void handleArguments(String[] args) {
         Options options = new Options();
 
-//        options.addOption(null, "help", false, "Print the help command");
-//        options.addOption("v", "version", false, "Prints the current version being ran");
-//        options.addOption("t", "ticks", false, "Run the program for a specified number of ticks");
-//        options.addOption("s", "silent", false, "Run without printing ANYTHING to the console. Useful for benchmarking");
-//        options.addOption("d", "debug", false, "Run the program in debug mode. It shows the program and highlights the dots with red. Press enter to step the program once.");
-//        options.addOption("w", "compat_debug", false, "Run the program without using ncurses. This can fix problems related to Windows.");
-//        options.addOption("l", "debug_lines", false, "When not in compatibility mode, reserve the specified number of the lines for displaying the program");
-//        options.addOption("a", "autostep_debug", false, "Step the program automatically, using the specified delay in seconds. Decimal numbers are permitted, and so is 0.");
-//        options.addOption("h", "head", false, "TODO: add description here");
         addOptions(options);
 
         try {
@@ -67,9 +69,15 @@ public class ADCLI {
                 return;
             }
 
-            String program = getFile(cmd);
+            code = getFile(cmd);
 
-            // TODO: Run the interpreter from here
+            ticks = (int) getValue(cmd, "ticks", -1);
+            silent = (boolean) getValue(cmd, "silent", false);
+            debug = (boolean) getValue(cmd, "debug", false);
+            compatDebug = (boolean) getValue(cmd, "compat_debug", false);
+            debugLines = (int) getValue(cmd, "debug_lines", -1);
+            autosetpDebug = (float) getValue(cmd, "autostep_debug", -1);
+            head = (int) getValue(cmd, "head", -1);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -120,7 +128,7 @@ public class ADCLI {
         options.addOption(Option.builder("a")
                 .longOpt("autostep_debug")
                 .hasArg(true)
-                .type(Integer.class)
+                .type(Float.class)
                 .optionalArg(false)
                 .argName("delay")
                 .desc("Step the program automatically, using the specified delay in seconds. Decimal numbers are permitted, and so is 0.")
@@ -130,9 +138,23 @@ public class ADCLI {
                 .hasArg(true)
                 .type(Integer.class)
                 .optionalArg(false)
-                .argName("TODO")
-                .desc("TODO: Add this description")
+                .argName("x")
+                .desc("Stop the program after x outputs")
                 .build());
+    }
+
+    private Object getValue(CommandLine cmd, String option, Object defaultValue) {
+        if(!cmd.hasOption(option))
+            return defaultValue;
+
+        try {
+            return cmd.getParsedOptionValue(option);
+        } catch (ParseException e) {
+            System.out.println("The value for the argument \"" + option + "\" must be a number");
+            System.exit(1);
+        }
+
+        return defaultValue;
     }
 
     private String getFile(CommandLine cmd) {
