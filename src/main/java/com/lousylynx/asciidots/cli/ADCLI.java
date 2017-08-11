@@ -137,7 +137,7 @@ public class ADCLI {
     }
 
     private Object getValue(CommandLine cmd, String option, Object defaultValue) {
-        if(!cmd.hasOption(option))
+        if (!cmd.hasOption(option))
             return defaultValue;
 
         try {
