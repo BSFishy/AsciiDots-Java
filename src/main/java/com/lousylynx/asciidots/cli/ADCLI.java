@@ -77,7 +77,14 @@ public class ADCLI {
             debugLines = (int) getValue(cmd, "debug_lines", -1);
             autosetpDebug = (float) getValue(cmd, "autostep_debug", -1);
             head = (int) getValue(cmd, "head", -1);
-        } catch (ParseException e) {
+        } catch (AmbiguousOptionException e) {
+            System.out.println("You must specify on or the other of the following arguments, instead of \"" + e.getOption() + "\": " + String.join(", ", e.getMatchingOptions()));
+        } catch (MissingArgumentException e) {
+            System.out.println("You must give the following argument a value: " + e.getOption().getLongOpt());
+        } catch (UnrecognizedOptionException e) {
+            System.out.println("The following is not a valid argument: " + e.getOption());
+        } catch (Exception e) {
+            System.out.println("There was an unexpected error. Please report this to the developers.");
             e.printStackTrace();
         }
     }
