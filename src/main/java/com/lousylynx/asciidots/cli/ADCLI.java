@@ -13,7 +13,6 @@ public class ADCLI {
     private int ticks;
     private boolean silent;
     private boolean debug;
-    private boolean compatDebug;
     private int debugLines;
     private float autosetpDebug;
     private int head;
@@ -74,7 +73,6 @@ public class ADCLI {
             ticks = (int) getValue(cmd, "ticks", -1);
             silent = (boolean) getValue(cmd, "silent", false);
             debug = (boolean) getValue(cmd, "debug", false);
-            compatDebug = (boolean) getValue(cmd, "compat_debug", false);
             debugLines = (int) getValue(cmd, "debug_lines", -1);
             autosetpDebug = (float) getValue(cmd, "autostep_debug", -1);
             head = (int) getValue(cmd, "head", -1);
@@ -111,11 +109,6 @@ public class ADCLI {
                 .longOpt("debug")
                 .hasArg(false)
                 .desc("Run the program in debug mode. It shows the program and highlights the dots with red. Press enter to step the program once.")
-                .build());
-        options.addOption(Option.builder("w")
-                .longOpt("compat_debug")
-                .hasArg(false)
-                .desc("Run the program without using ncurses. This can fix problems related to Windows.")
                 .build());
         options.addOption(Option.builder("l")
                 .longOpt("debug_lines")
