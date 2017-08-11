@@ -25,11 +25,26 @@ dependencies {
 }
 
 jar {
+    include '**'
+    exclude 'com/lousylynx/asciidots/cli/**'
+}
+
+task cliJar(type: Jar, dependsOn: [':compileJava', ':processResources']) {
     manifest {
         attributes 'Main-Class': 'com.lousylynx.asciidots.cli.ADCLI'
     }
 
-    from {
-        configurations.fatjar.collect { it.isDirectory() ? it : zipTree(it) }
-    }
+    from configurations.fatjar.collect { it.isDirectory() ? it : zipTree(it) }
+    from sourceSets.main.output
+
+    include '**'
+    exclude 'META-INF/**'
+    include 'META-INF/MANIFEST.MF'
+
+    classifier 'cli'
+}
+
+artifacts {
+    archives cliJar
+    archives jar
 }
