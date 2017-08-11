@@ -5,13 +5,13 @@ version '1.0'
 
 apply plugin: 'java'
 apply plugin: 'checkstyle'
+apply plugin: 'idea'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    mavenLocal()
 }
 
 configurations {
@@ -20,7 +20,7 @@ configurations {
 
 dependencies {
 //    testCompile group: 'junit', name: 'junit', version: '4.12'
-    fatjar group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    fatjar 'commons-cli:commons-cli:1.4'
     compileOnly 'org.projectlombok:lombok:1.16.18'
 
     configurations.compile.extendsFrom(configurations.fatjar)
@@ -64,4 +64,14 @@ task cliJar(type: Jar, dependsOn: [':compileForRelease', ':sourcesForRelease']) 
 artifacts {
     archives cliJar
     archives jar
+}
+
+idea {
+    module {
+        // if you hate browsing Javadoc
+        downloadJavadoc = true
+
+        // and love reading sources :)
+        downloadSources = true
+    }
 }
