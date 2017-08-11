@@ -6,6 +6,8 @@ import org.apache.commons.cli.*;
 @Data
 public class ADCLI {
 
+    public static final String VERSION = "@VERSION@";
+
     private boolean exit = false;
     private String[] args;
     private String code;
@@ -49,8 +51,7 @@ public class ADCLI {
             }
 
             if (cmd.hasOption("version")) {
-                // TODO: make this non hardcoded
-                System.out.println("Current version is: 1.0");
+                System.out.println("Current version is: " + VERSION);
 
                 exit = true;
                 return;
