@@ -24,11 +24,11 @@ public class ADCLI {
         new ADCLI(args).start();
     }
 
-    public ADCLI(String[] args) {
+    private ADCLI(String[] args) {
         this.args = args;
     }
 
-    public void start() {
+    private void start() {
         Dependencies.checkDependencies();
         handleArguments(args);
 
@@ -44,6 +44,7 @@ public class ADCLI {
         try {
             CommandLine cmd = new DefaultParser().parse(options, args, false);
 
+
             if (cmd.hasOption("help")) {
                 HelpFormatter formatter = new HelpFormatter();
                 formatter.printHelp("asciidots <FILE>", options, true);
@@ -53,7 +54,7 @@ public class ADCLI {
             }
 
             if (cmd.hasOption("version")) {
-                System.out.println("Current version is: " + VERSION);
+                Log.info("Current version is: " + VERSION);
 
                 exit = true;
                 return;
@@ -73,12 +74,12 @@ public class ADCLI {
 
             code = getFile(cmd);
 
-            ticks = (int) getValue(cmd, "ticks", -1);
-            silent = (boolean) getValue(cmd, "silent", false);
-            debug = (boolean) getValue(cmd, "debug", false);
-            debugLines = (int) getValue(cmd, "debug_lines", -1);
-            autosetpDebug = (float) getValue(cmd, "autostep_debug", -1);
-            head = (int) getValue(cmd, "head", -1);
+            ticks = Integer.parseInt(getValue(cmd, "ticks", -1));
+            silent = Boolean.parseBoolean(getValue(cmd, "silent", false));
+            debug = Boolean.parseBoolean(getValue(cmd, "debug", false));
+            debugLines = Integer.parseInt(getValue(cmd, "debug_lines", -1));
+            autosetpDebug = Float.parseFloat(getValue(cmd, "autostep_debug", -1f));
+            head = Integer.parseInt(getValue(cmd, "head", -1));
         } catch (AmbiguousOptionException e) {
             Log.error("You must specify on or the other of the following arguments, instead of \"" + e.getOption() + "\": " + String.join(", ", e.getMatchingOptions()));
         } catch (MissingArgumentException e) {
@@ -94,17 +95,15 @@ public class ADCLI {
     private void addOptions(final Options options) {
         options.addOption(Option.builder(null)
                 .longOpt("help")
-                .hasArg(false)
                 .desc("Display the help information")
                 .build());
         options.addOption(Option.builder("v")
                 .longOpt("version")
-                .hasArg(false)
                 .desc("Print the current version of AsciiDots")
                 .build());
         options.addOption(Option.builder("t")
                 .longOpt("ticks")
-                .hasArg(true)
+                .hasArg()
                 .type(Integer.class)
                 .optionalArg(false)
                 .argName("ticks")
@@ -112,17 +111,15 @@ public class ADCLI {
                 .build());
         options.addOption(Option.builder("s")
                 .longOpt("silent")
-                .hasArg(false)
                 .desc("Run without printing ANYTHING to the console. Useful for benchmarking")
                 .build());
         options.addOption(Option.builder("d")
                 .longOpt("debug")
-                .hasArg(false)
                 .desc("Run the program in debug mode. It shows the program and highlights the dots with red. Press enter to step the program once.")
                 .build());
         options.addOption(Option.builder("l")
                 .longOpt("debug_lines")
-                .hasArg(true)
+                .hasArg()
                 .type(Integer.class)
                 .optionalArg(false)
                 .argName("line-count")
@@ -130,7 +127,7 @@ public class ADCLI {
                 .build());
         options.addOption(Option.builder("a")
                 .longOpt("autostep_debug")
-                .hasArg(true)
+                .hasArg()
                 .type(Float.class)
                 .optionalArg(false)
                 .argName("delay")
@@ -138,7 +135,7 @@ public class ADCLI {
                 .build());
         options.addOption(Option.builder("h")
                 .longOpt("head")
-                .hasArg(true)
+                .hasArg()
                 .type(Integer.class)
                 .optionalArg(false)
                 .argName("x")
@@ -146,18 +143,8 @@ public class ADCLI {
                 .build());
     }
 
-    private Object getValue(CommandLine cmd, String option, Object defaultValue) {
-        if (!cmd.hasOption(option))
-            return defaultValue;
-
-        try {
-            return cmd.getParsedOptionValue(option);
-        } catch (ParseException e) {
-            Log.error("The value for the argument \"" + option + "\" must be a number");
-            System.exit(1);
-        }
-
-        return defaultValue;
+    private String getValue(CommandLine cmd, String option, Object defaultValue) {
+        return cmd.getOptionValue(option, defaultValue.toString());
     }
 
     private String getFile(CommandLine cmd) {

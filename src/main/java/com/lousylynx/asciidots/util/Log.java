@@ -9,7 +9,7 @@ public class Log {
         AnsiConsole.systemInstall();
     }
 
-    public static void log(String message) {
+    public static void info(Object message) {
         System.out.println(message);
     }
 
