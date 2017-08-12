@@ -21,6 +21,8 @@ configurations {
 dependencies {
 //    testCompile group: 'junit', name: 'junit', version: '4.12'
     fatjar 'commons-cli:commons-cli:1.4'
+    fatjar 'commons-io:commons-io:2.4'
+    compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.16'
     compileOnly 'org.projectlombok:lombok:1.16.18'
 
     configurations.compile.extendsFrom(configurations.fatjar)
@@ -45,14 +47,12 @@ task compileForRelease(type: JavaCompile, dependsOn: sourcesForRelease) {
 
 task cliJar(type: Jar, dependsOn: [':compileForRelease', ':sourcesForRelease']) {
     manifest {
-        attributes 'Main-Class': 'com.lousylynx.asciidots.cli.ADCLI'
+        attributes 'Main-Class': 'com.lousylynx.asciidots.cli.ADCLI',
+                'Class-Path': 'libs/* libs/jansi.jar'
     }
 
     from configurations.fatjar.collect { it.isDirectory() ? it : zipTree(it) }
-    //from sourceSets.main.output
     from compileForRelease.destinationDir
-
-    //print(compileForRelease.main.output)
 
     include '**'
     exclude 'META-INF/**'
@@ -68,10 +68,7 @@ artifacts {
 
 idea {
     module {
-        // if you hate browsing Javadoc
         downloadJavadoc = true
-
-        // and love reading sources :)
         downloadSources = true
     }
 }

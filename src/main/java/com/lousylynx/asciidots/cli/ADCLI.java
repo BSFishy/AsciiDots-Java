@@ -1,5 +1,6 @@
 package com.lousylynx.asciidots.cli;
 
+import com.lousylynx.asciidots.util.Log;
 import lombok.Data;
 import org.apache.commons.cli.*;
 
@@ -28,6 +29,7 @@ public class ADCLI {
     }
 
     public void start() {
+        Dependencies.checkDependencies();
         handleArguments(args);
 
         if (exit)
@@ -58,12 +60,12 @@ public class ADCLI {
             }
 
             if (cmd.getArgs().length > 1) {
-                System.out.println("Unknown stray arguments: " + String.join(", ", cmd.getArgList()));
+                Log.error("Unknown stray arguments: " + String.join(", ", cmd.getArgList()));
 
                 exit = true;
                 return;
             } else if (cmd.getArgs().length < 1) {
-                System.out.println("You must specify a file to run.");
+                Log.error("You must specify a file to run.");
 
                 exit = true;
                 return;
@@ -78,13 +80,13 @@ public class ADCLI {
             autosetpDebug = (float) getValue(cmd, "autostep_debug", -1);
             head = (int) getValue(cmd, "head", -1);
         } catch (AmbiguousOptionException e) {
-            System.out.println("You must specify on or the other of the following arguments, instead of \"" + e.getOption() + "\": " + String.join(", ", e.getMatchingOptions()));
+            Log.error("You must specify on or the other of the following arguments, instead of \"" + e.getOption() + "\": " + String.join(", ", e.getMatchingOptions()));
         } catch (MissingArgumentException e) {
-            System.out.println("You must give the following argument a value: " + e.getOption().getLongOpt());
+            Log.error("You must give the following argument a value: " + e.getOption().getLongOpt());
         } catch (UnrecognizedOptionException e) {
-            System.out.println("The following is not a valid argument: " + e.getOption());
+            Log.error("The following is not a valid argument: " + e.getOption());
         } catch (Exception e) {
-            System.out.println("There was an unexpected error. Please report this to the developers.");
+            Log.error("There was an unexpected error. Please report this to the developers.");
             e.printStackTrace();
         }
     }
@@ -151,7 +153,7 @@ public class ADCLI {
         try {
             return cmd.getParsedOptionValue(option);
         } catch (ParseException e) {
-            System.out.println("The value for the argument \"" + option + "\" must be a number");
+            Log.error("The value for the argument \"" + option + "\" must be a number");
             System.exit(1);
         }
 
