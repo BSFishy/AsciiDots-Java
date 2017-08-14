@@ -10,10 +10,10 @@ public class Interpreter {
 
     public static void main(String[] args) throws IOException {
         System.out.println();
-        Interpreter interpreter = new Interpreter(".-$#", ".");
+//        Interpreter interpreter = new Interpreter(".-$#", ".");
     }
 
-    public Interpreter(String program, String programDir) throws IOException {
+    public Interpreter(String program, String programDir, ICallbackHandler callbackHandler) throws IOException {
         String path = Paths.get(".").toAbsolutePath().normalize().toString();
         String pathToPython = "/usr/local/bin/python3";
 
