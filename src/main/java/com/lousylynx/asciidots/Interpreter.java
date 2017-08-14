@@ -38,13 +38,15 @@ public class Interpreter {
             len += charsRead;
 
             if (new String(passRequest, len - charsRead, len).contains("?: ")) {
-                stdIn.write("6\n".getBytes("utf-8"));
+            	    String input = Integer.toString(callbackHandler.getInput()) + "\n";
+                stdIn.write(input.getBytes("utf-8"));
                 stdIn.flush();
             } else if (new String(passRequest, len - charsRead, len).contains("$ ")) {
                 stdIn.write((program + "\n%EOF\n").getBytes("utf-8"));
                 stdIn.flush();
+                callbackHandler.onStart();
             } else {
-                System.out.print(new String(passRequest, len - charsRead, len));
+            	    callbackHandler.onOutput(new String(passRequest, len - charsRead, len));
             }
 
             if (len > 512) {
@@ -52,6 +54,8 @@ public class Interpreter {
                 len = 0;
             }
         }
+        
+        callbackHandler.onEnd();
 
         process.destroy();
     }
