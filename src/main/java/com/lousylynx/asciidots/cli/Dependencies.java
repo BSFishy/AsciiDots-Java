@@ -23,18 +23,27 @@ public class Dependencies {
 
     public static void refreshDependencies() {
         File libsFolder = new File(getRunningDirectory() + "/libs/");
-        JarFileLoader cl = new JarFileLoader(new URL[] {});
+        JarFileLoader cl = new JarFileLoader(new URL[]{});
+
+        boolean failed = false;
 
         try {
             //Class.forName("org.fusesource.jansi.Ansi", false, ClassLoader.getSystemClassLoader());
             //cl.addFile(libsFolder.getAbsolutePath() + File.separator + "jansi.jar");
-            cl.addFile(libsFolder.getAbsolutePath() + File.separator + "jansi.jar");
+            cl.addUrl(new File(libsFolder.getAbsolutePath() + File.separator + "jansi.jar"));
             cl.loadClass("org.fusesource.jansi.Ansi");
-        } catch (ClassNotFoundException | MalformedURLException e) {
-            System.out.println("Unable to download and install Jansi.");
-            e.printStackTrace();
+            cl.loadClass("org.fusesource.jansi.AnsiConsole");
 
-            System.exit(1);
+            Class.forName("org.fusesource.jansi.Ansi");
+            Class.forName("org.fusesource.jansi.AnsiConsole");
+        } catch (ClassNotFoundException | MalformedURLException e) {
+            failed = true;
+        }
+
+        if (failed) {
+            System.out.println("The libraries were installed, and are ready to run. Please run the command again to get the desired results.");
+
+            System.exit(0);
         }
     }
 

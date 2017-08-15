@@ -1,6 +1,7 @@
 package com.lousylynx.asciidots.cli;
 
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -15,7 +16,7 @@ public class JarFileLoader extends URLClassLoader {
         addURL(new URL(urlPath));
     }
 
-    public void addUrl(URL url) throws MalformedURLException {
-        addURL(url);
+    public void addUrl(File url) throws MalformedURLException {
+        addURL(url.toURI().toURL());
     }
 }

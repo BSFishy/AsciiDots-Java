@@ -1,6 +1,7 @@
 package com.lousylynx.asciidots.util;
 
 import org.fusesource.jansi.AnsiConsole;
+
 import static org.fusesource.jansi.Ansi.*;
 
 public class Log {
