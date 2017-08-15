@@ -3,6 +3,11 @@ package com.lousylynx.asciidots.cli;
 import com.lousylynx.asciidots.util.Log;
 import lombok.Data;
 import org.apache.commons.cli.*;
+import org.apache.logging.log4j.Level;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Data
 public class ADCLI {
@@ -150,8 +155,16 @@ public class ADCLI {
     private String getFile(CommandLine cmd) {
         String file = cmd.getArgs()[0];
 
-        // TODO: continue reading the file and output the contents
+        try {
+            return String.join("\n", Files.readAllLines(Paths.get(file)));
+        } catch (IOException e) {
+//            e.printStackTrace();
+            Log.error("There was an error getting the contents of " + file);
+            Log.log(Level.ERROR, e.getMessage(), e);
 
-        return file;
+            System.exit(1);
+        }
+
+        return null;
     }
 }
