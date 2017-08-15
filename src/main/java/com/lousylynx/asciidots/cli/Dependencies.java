@@ -12,9 +12,7 @@ public class Dependencies {
     public static void checkDependencies() {
         try {
             Class.forName("org.fusesource.jansi.Ansi");
-            // We have the class
         } catch (ClassNotFoundException ignored) {
-            // We don't have the class
             downloadDependency("jansi", "http://repo1.maven.org/maven2/org/fusesource/jansi/jansi/1.16/jansi-1.16.jar");
 
             refreshDependencies();
@@ -28,8 +26,6 @@ public class Dependencies {
         boolean failed = false;
 
         try {
-            //Class.forName("org.fusesource.jansi.Ansi", false, ClassLoader.getSystemClassLoader());
-            //cl.addFile(libsFolder.getAbsolutePath() + File.separator + "jansi.jar");
             cl.addUrl(new File(libsFolder.getAbsolutePath() + File.separator + "jansi.jar"));
             cl.loadClass("org.fusesource.jansi.Ansi");
             cl.loadClass("org.fusesource.jansi.AnsiConsole");
@@ -68,8 +64,6 @@ public class Dependencies {
             while ((count = is.read(data, 0, 1024)) != -1) {
                 bos.write(data, 0, count);
             }
-
-            //os.write(is.read());
 
             os.flush();
             bos.flush();

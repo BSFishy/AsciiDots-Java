@@ -158,7 +158,6 @@ public class ADCLI {
         try {
             return String.join("\n", Files.readAllLines(Paths.get(file)));
         } catch (IOException e) {
-//            e.printStackTrace();
             Log.error("There was an error getting the contents of " + file);
             Log.log(Level.ERROR, e.getMessage(), e);
 
